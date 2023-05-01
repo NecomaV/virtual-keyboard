@@ -1,15 +1,3 @@
-const container = document.createElement('div');
-
-document.body.appendChild(container);
-
-container.classList.add('container');
-
-
-const textArea = document.createElement('textarea');
-document.body.appendChild(textArea);
-textArea.classList.add('text__area');
-
-
 const buttonData = [
   { text: '~', class: 'esc' },
   { text: '1', class: 'one' },
@@ -82,6 +70,17 @@ const buttonData = [
 
 ];
 
+const container = document.createElement('div');
+const textArea = document.createElement('textarea');
+
+document.body.appendChild(container);
+document.body.appendChild(textArea);
+
+textArea.classList.add('text__area');
+container.classList.add('container');
+
+textArea.setAttribute('id', 'input');
+
 buttonData.forEach((button) => {
   const newButton = document.createElement('button');
   newButton.innerText = button.text;
@@ -89,5 +88,36 @@ buttonData.forEach((button) => {
   container.appendChild(newButton);
 });
 
+function handle(e) {
+  e.preventDefault();
+
+  const { key } = e;
+  const { keyCode } = e;
+
+  if (keyCode === 8) {
+    const currentValue = textArea.value;
+    textArea.value = currentValue.slice(0, -1);
+  } else if (keyCode === 9) {
+    textArea.value += '\t';
+  } else if (keyCode === 16 || keyCode === 20 || keyCode === 13 || keyCode === 18 || keyCode === 91 || keyCode === 17) {
+    currentValue = textArea.value;
+    textArea.value = currentValue;
+  } else if (e.ctrlKey && (e.key === 'x' || e.key === 'c' || e.key === 'z' || e.key === 'v')) {
+    switch (e.key) {
+      case 'x':
+        document.execCommand('cut');
+        break;
+      case 'c':
+        document.execCommand('copy');
+        break;
+      case 'z':
+        document.execCommand('undo');
+        break;
+    }
+  } else {
+    textArea.value += key;
+  }
+}
 
 
+textArea.onkeydown = handle;
