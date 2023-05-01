@@ -96,3 +96,8 @@ body {
 .btn.shift-r {
     width: 50px;
 }
+
+
+.light {
+    background-color: yellow;
+}

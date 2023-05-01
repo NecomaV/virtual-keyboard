@@ -80,12 +80,55 @@ textArea.classList.add('text__area');
 container.classList.add('container');
 
 textArea.setAttribute('id', 'input');
+let bol = false;
 
 buttonData.forEach((button) => {
   const newButton = document.createElement('button');
-  newButton.innerText = button.text;
+
+
+    newButton.innerText = button.text.toUpperCase();
+ 
   newButton.classList.add('btn', button.class);
   container.appendChild(newButton);
+
+  newButton.addEventListener('click', (e) => {
+    const textContent = button.text;
+    
+    if (textContent === '<--') {
+      const currentValue = textArea.value;
+      textArea.value = currentValue.slice(0, -1);
+    } else if (textContent === 'Tab') {
+      textArea.value += '\t';
+    } 
+    else if(textContent === 'ENTER') {
+      textArea.value += '\n';
+    }
+    else if (textContent === 'Ctrl' || textContent === 'ENTER' || textContent === 'Win' || textContent === 'SHIFT' || textContent === 'Shift'  || textContent === 'DEL' || textContent === 'Alt' || textContent === 'CAPS LOCK') {
+      currentValue = textArea.value;
+      textArea.value = currentValue;
+    } else if (bol) {
+      textArea.value += textContent.toUpperCase();
+      newButton.innerText = button.text.toLowerCase();
+    } else {
+      textArea.value += textContent.toLowerCase();
+      newButton.innerText = button.text.toUpperCase();
+    }
+  });
+
+  // Add a separate event listener for the caps lock button
+  if (button.class === 'caps') {
+    newButton.addEventListener('click', (e) => {
+      bol = !bol;
+      const capsButtons = document.querySelectorAll('.caps, .one, .two, .three, .four, .five, .six, .seven, .eight, .nine, .zero, .dash, .equal, .q, .w, .e, .r, .t, .y, .u, .i, .o, .p, .bracket-l, .bracket-r, .a, .s, .d, .f, .g, .h, .j, .k, .l, .doubleDot, .apost-l, .z, .x, .c, .v, .b, .n, .m, .dot, .comma, .dash-r');
+      capsButtons.forEach((button) => {
+        if (bol) {
+          button.classList.add('caps-on');
+        } else {
+          button.classList.remove('caps-on');
+        }
+      });
+    });
+  }
 });
 
 function handle(e) {
@@ -93,9 +136,9 @@ function handle(e) {
 
   const { key } = e;
   const { keyCode } = e;
-
+  let currentValue = '';
   if (keyCode === 8) {
-    const currentValue = textArea.value;
+    currentValue = textArea.value;
     textArea.value = currentValue.slice(0, -1);
   } else if (keyCode === 9) {
     textArea.value += '\t';
@@ -118,6 +161,5 @@ function handle(e) {
     textArea.value += key;
   }
 }
-
 
 textArea.onkeydown = handle;
