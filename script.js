@@ -80,56 +80,66 @@ textArea.classList.add('text__area');
 container.classList.add('container');
 
 textArea.setAttribute('id', 'input');
-let bol = false;
+let keyboardCase = 'lowercase';
+
+function updateButtonCase() {
+  const buttons = document.querySelectorAll('button');
+  buttons.forEach((button) => {
+    const butAs = button;
+
+    if (keyboardCase === 'lowercase') {
+      butAs.innerText = butAs.innerText.toLowerCase();
+    } else {
+      butAs.innerText = butAs.innerText.toUpperCase();
+    }
+  });
+}
 
 buttonData.forEach((button) => {
   const newButton = document.createElement('button');
 
+  newButton.innerText = button.text.toUpperCase();
 
-    newButton.innerText = button.text.toUpperCase();
- 
   newButton.classList.add('btn', button.class);
   container.appendChild(newButton);
 
-  newButton.addEventListener('click', (e) => {
+  newButton.addEventListener('click', () => {
     const textContent = button.text;
-    
     if (textContent === '<--') {
       const currentValue = textArea.value;
       textArea.value = currentValue.slice(0, -1);
     } else if (textContent === 'Tab') {
       textArea.value += '\t';
-    } 
-    else if(textContent === 'ENTER') {
+    } else if (textContent === 'ENTER') {
       textArea.value += '\n';
-    }
-    else if (textContent === 'Ctrl' || textContent === 'ENTER' || textContent === 'Win' || textContent === 'SHIFT' || textContent === 'Shift'  || textContent === 'DEL' || textContent === 'Alt' || textContent === 'CAPS LOCK') {
-      currentValue = textArea.value;
+    } else if (textContent === 'Ctrl' || textContent === 'ENTER' || textContent === 'Win' || textContent === 'SHIFT' || textContent === 'Shift' || textContent === 'DEL' || textContent === 'Alt' || textContent === 'CAPS LOCK') {
+      const currentValue = textArea.value;
       textArea.value = currentValue;
-    } else if (bol) {
+    } else if (keyboardCase === 'uppercase') {
       textArea.value += textContent.toUpperCase();
-      newButton.innerText = button.text.toLowerCase();
     } else {
       textArea.value += textContent.toLowerCase();
-      newButton.innerText = button.text.toUpperCase();
     }
   });
 
   // Add a separate event listener for the caps lock button
   if (button.class === 'caps') {
-    newButton.addEventListener('click', (e) => {
-      bol = !bol;
+    newButton.addEventListener('click', () => {
+      keyboardCase = keyboardCase === 'lowercase' ? 'uppercase' : 'lowercase';
+      updateButtonCase();
       const capsButtons = document.querySelectorAll('.caps, .one, .two, .three, .four, .five, .six, .seven, .eight, .nine, .zero, .dash, .equal, .q, .w, .e, .r, .t, .y, .u, .i, .o, .p, .bracket-l, .bracket-r, .a, .s, .d, .f, .g, .h, .j, .k, .l, .doubleDot, .apost-l, .z, .x, .c, .v, .b, .n, .m, .dot, .comma, .dash-r');
-      capsButtons.forEach((button) => {
-        if (bol) {
-          button.classList.add('caps-on');
+      capsButtons.forEach((buttonss) => {
+        if (keyboardCase === 'uppercase') {
+          buttonss.classList.add('caps-on');
         } else {
-          button.classList.remove('caps-on');
+          buttonss.classList.remove('caps-on');
         }
       });
     });
   }
 });
+
+updateButtonCase();
 
 function handle(e) {
   e.preventDefault();
@@ -155,6 +165,8 @@ function handle(e) {
         break;
       case 'z':
         document.execCommand('undo');
+        break;
+      default:
         break;
     }
   } else {
