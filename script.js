@@ -99,18 +99,20 @@ buttonData.forEach((button) => {
   const newButton = document.createElement('button');
 
   newButton.innerText = button.text.toUpperCase();
+  newButton.setAttribute('data-key', button.text.toLowerCase());
 
   newButton.classList.add('btn', button.class);
   container.appendChild(newButton);
 
   newButton.addEventListener('click', () => {
     const textContent = button.text;
+
     if (textContent === '<--') {
       const currentValue = textArea.value;
       textArea.value = currentValue.slice(0, -1);
     } else if (textContent === 'Tab') {
       textArea.value += '\t';
-    } else if (textContent === 'ENTER') {
+    } else if (textContent === 'ENTER' ) {
       textArea.value += '\n';
     } else if (textContent === 'Ctrl' || textContent === 'ENTER' || textContent === 'Win' || textContent === 'SHIFT' || textContent === 'Shift' || textContent === 'DEL' || textContent === 'Alt' || textContent === 'CAPS LOCK') {
       const currentValue = textArea.value;
@@ -122,7 +124,15 @@ buttonData.forEach((button) => {
     }
   });
 
-  // Add a separate event listener for the caps lock button
+  newButton.addEventListener('mousedown', () => {
+    newButton.classList.add('light');
+  });
+
+  newButton.addEventListener('mouseup', () => {
+    newButton.classList.remove('light');
+  });
+
+
   if (button.class === 'caps') {
     newButton.addEventListener('click', () => {
       keyboardCase = keyboardCase === 'lowercase' ? 'uppercase' : 'lowercase';
@@ -138,6 +148,32 @@ buttonData.forEach((button) => {
     });
   }
 });
+
+document.addEventListener('keydown', (event) => {
+  const key = event.key;
+  const button = document.querySelector(`button[data-key="${key}"]`);
+
+  if (button) {
+    button.style.backgroundColor = 'yellow';
+  }
+  else {
+    button.style.backgroundColor = 'grey';
+
+  }
+});
+
+document.addEventListener('keyup', (event) => {
+  const key = event.key;
+  const button = document.querySelector(`button[data-key="${key}"]`);
+
+  if (button) {
+    button.style.backgroundColor = 'rgb(204, 227, 247)';
+    
+
+    textArea.value += key;
+  }
+});
+
 
 updateButtonCase();
 

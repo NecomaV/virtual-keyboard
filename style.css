@@ -48,6 +48,7 @@ body {
     box-shadow: 4px 6px 7px #000;
 
     cursor: pointer;
+    background-color: rgb(204, 227, 247);
 }
 
 .text__area { 
@@ -98,6 +99,7 @@ body {
 }
 
 
-.light {
+.btn.light {
     background-color: yellow;
+    transition: .2s;
 }
